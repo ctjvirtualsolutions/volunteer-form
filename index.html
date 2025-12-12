@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Volunteer Registration</title>
+    <style>
+        /* --- THEME CONFIGURATION --- */
+        :root {
+            --primary-color: #2e5a8f; /* Deep Blue (JW Style) */
+            --primary-hover: #1f426d;
+            --accent-color: #4a90e2; 
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --text-muted: #666666;
+            --border-radius: 12px;
+            --input-radius: 8px;
+            --font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* --- RESET & LAYOUT --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px 10px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        /* --- HEADER & BANNER --- */
+        .banner {
+            width: 100%;
+            height: 180px;
+            background-color: var(--primary-color);
+            background-image: url('https://placehold.co/800x300/2e5a8f/ffffff?text=Preaching+Campaign'); /* Placeholder */
+            background-size: cover;
+            background-position: center;
+        }
+
+        .header-content {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .header-content h1 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .header-content p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* --- FORM STYLES --- */
+        form {
+            padding: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: var(--input-radius);
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            background-color: #fafafa;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        /* Radio Group Styling */
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--input-radius);
+            flex: 1;
+            transition: 0.2s;
+        }
+
+        .radio-option:hover {
+            background-color: #f0f4ff;
+        }
+
+        .radio-option input {
+            margin-right: 10px;
+            accent-color: var(--primary-color);
+        }
+
+        /* Conditional Visibility */
+        .hidden {
+            display: none;
+        }
+
+        /* Submit Button */
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--input-radius);
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-submit:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 3px solid white;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Success/Error Message */
+        .message-box {
+            padding: 15px;
+            border-radius: var(--input-radius);
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+        /* Mobile tweaks */
+        @media (max-width: 480px) {
+            .container { border-radius: 0; box-shadow: none; }
+            body { padding: 0; background-color: #fff; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="banner">
+        </div>
+    <div class="header-content">
+        <h1>Special Campaign</h1>
+        <p>Please fill out your details to volunteer for the upcoming preaching event.</p>
+    </div>
+
+    <form id="volunteerForm">
+        
+        <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" name="fullName" placeholder="Brother/Sister Name" required>
+        </div>
+
+        <div class="form-group">
+            <label for="congregation">Congregation</label>
+            <input type="text" id="congregation" name="congregation" required>
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Phone / WhatsApp</label>
+            <input type="tel" id="phone" name="phone" placeholder="e.g., +1 555..." required>
+        </div>
+
+        <div class="form-group">
+            <label>Do you already have a partner?</label>
+            <div class="radio-group">
+                <label class="radio-option">
+                    <input type="radio" name="hasPartner" value="Yes" onclick="togglePartnerField(true)"> Yes
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="hasPartner" value="No" onclick="togglePartnerField(false)" checked> No
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group hidden" id="partnerFieldGroup">
+            <label for="partnerName">Partner Name</label>
+            <input type="text" id="partnerName" name="partnerName">
+        </div>
+
+        <div class="form-group">
+            <label for="arrivalTime">Arrival Time</label>
+            <select id="arrivalTime" name="arrivalTime" required>
+                <option value="" disabled selected>Select time...</option>
+                <option value="11:00">11:00</option>
+                <option value="12:00">12:00</option>
+                <option value="13:00">13:00</option>
+                <option value="14:00">14:00</option>
+                <option value="14:30">14:30</option>
+                <option value="15:00">15:00</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="departureTime">Until what time can you stay?</label>
+            <select id="departureTime" name="departureTime" required>
+                <option value="" disabled selected>Select time...</option>
+                <option value="13:00">13:00</option>
+                <option value="14:00">14:00</option>
+                <option value="15:00">15:00</option>
+                <option value="16:00">16:00</option>
+                <option value="17:00">17:00</option>
+                <option value="18:00">18:00</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="availabilityType">When can you be there?</label>
+            <select id="availabilityType" name="availabilityType" required>
+                <option value="From Beginning (11:00)">From the beginning (11:00)</option>
+                <option value="After Meeting (14:00-14:30)">Only after my meeting (14:00–14:30)</option>
+                <option value="Flexible">Flexible</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>What type of service do you prefer?</label>
+            <div class="radio-group">
+                <label class="radio-option">
+                    <input type="radio" name="serviceType" value="Display" required> Display
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="serviceType" value="Walking"> Walking
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="serviceType" value="Both"> Both
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Can you stay the whole event?</label>
+            <div class="radio-group">
+                <label class="radio-option">
+                    <input type="radio" name="stayWholeEvent" value="Yes" required> Yes
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="stayWholeEvent" value="No"> No
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="comments">Additional Comments</label>
+            <textarea id="comments" name="comments" rows="3" placeholder="Any restrictions or notes?"></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">
+            Submit Registration <span class="spinner" id="loadingSpinner"></span>
+        </button>
+
+        <div id="responseMessage" class="message-box"></div>
+    </form>
+</div>
+
+<script>
+    // --- CONFIGURATION ---
+    // PASTE YOUR GOOGLE SCRIPT WEB APP URL HERE
+    const SCRIPT_URL = https://script.google.com/macros/s/AKfycbxBNc9qtCWg-WrGb5t2T_GtRc8cPoLFcPA29KKBENV32SFjx2gSUJijwnTegsQGSNhTjw/exec; 
+
+    // --- LOGIC ---
+
+    // Toggle Partner Field
+    function togglePartnerField(show) {
+        const field = document.getElementById('partnerFieldGroup');
+        const input = document.getElementById('partnerName');
+        if (show) {
+            field.classList.remove('hidden');
+            input.setAttribute('required', 'true');
+        } else {
+            field.classList.add('hidden');
+            input.removeAttribute('required');
+            input.value = ''; // clear value
+        }
+    }
+
+    // Handle Form Submission
+    document.getElementById('volunteerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const btn = document.getElementById('submitBtn');
+        const spinner = document.getElementById('loadingSpinner');
+        const msgBox = document.getElementById('responseMessage');
+
+        // Reset UI
+        msgBox.style.display = 'none';
+        msgBox.className = 'message-box';
+        btn.disabled = true;
+        btn.innerText = "Submitting...";
+        spinner.style.display = 'block';
+        btn.appendChild(spinner);
+
+        // Collect Data
+        const formData = new FormData(this);
+        const data = {};
+        formData.forEach((value, key) => {
+            data[key] = value;
+        });
+
+        // Send to Google Apps Script
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+            if(result.result === 'success') {
+                msgBox.innerText = "Registration successful! Thank you.";
+                msgBox.classList.add('success');
+                msgBox.style.display = 'block';
+                document.getElementById('volunteerForm').reset();
+                // Reset hidden fields
+                togglePartnerField(false);
+            } else {
+                throw new Error(result.message);
+            }
+        })
+        .catch(error => {
+            msgBox.innerText = "Error: " + error.message;
+            msgBox.classList.add('error');
+            msgBox.style.display = 'block';
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.innerText = "Submit Registration";
+            spinner.style.display = 'none'; // Re-append spinner in DOM if needed, but text reset clears it
+        });
+    });
+</script>
+
+</body>
+</html>
